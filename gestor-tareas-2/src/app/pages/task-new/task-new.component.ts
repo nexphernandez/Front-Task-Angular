@@ -17,7 +17,7 @@ export class TaskNewComponent {
 
   form = this.fb.nonNullable.group({
     titulo: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
-    descripcion: this.fb.nonNullable.control(''),
+    descripcion: this.fb.nonNullable.control('',[Validators.minLength(5)]),
     completada: this.fb.nonNullable.control(false),
   });
 
