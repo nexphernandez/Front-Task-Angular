@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { TasksService } from '../../services/tasks.service';
+import { TasksApiService } from '../../services/tasks-api.service';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-tasks',
@@ -8,9 +9,39 @@ import { TasksService } from '../../services/tasks.service';
   styleUrl: './tasks.component.css',
 })
 export class TasksComponent {
-  constructor(public tasksService: TasksService) {}
+  tasks: Task[] = [];
+  loading = true;
+  error: string | null = null;
+
+  constructor(public tasksService: TasksApiService) { }
+
+  ngOnInit(): void {
+    this.tasksService.list().subscribe({
+      next: (data) => {
+        this.tasks = data;
+        this.loading = false;
+      },
+      error: () => {this.error = "No se pudieron cargar las tareas"; this.loading = false},
+    });
+  }
+
+  completed(task: Task) {
+    const updatedTask = { ...task, completada: !task.completada };
+    this.tasksService.update(updatedTask).subscribe({
+      next: () => this.tasks = this.tasks.map(t => {
+        if (t.id === task.id) {
+          return updatedTask;
+        }
+        return t;
+      }),
+      error: () => this.error = 'No se pudo actualizar la tarea',
+    });
+  }
 
   remove(id: number) {
-    this.tasksService.remove(id);
+    this.tasksService.remove(id).subscribe({
+      next: () => this.tasks = this.tasks.filter(t => t.id !== id),
+      error: () => this.error = 'No se pudo eliminar la tarea',
+    });
   }
 }

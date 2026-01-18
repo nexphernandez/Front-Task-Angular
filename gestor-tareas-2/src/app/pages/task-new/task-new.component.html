@@ -8,15 +8,21 @@
     </label>
 
     @if (form.controls.titulo.touched && form.controls.titulo.invalid) {
-      <div class="error">
-        El título es obligatorio y debe tener al menos 3 caracteres.
-      </div>
+    <div class="error">
+      El título es obligatorio y debe tener al menos 3 caracteres.
+    </div>
     }
 
     <label>
       Descripción (opcional)
       <input class="input" formControlName="descripcion" />
     </label>
+    
+    @if (form.controls.descripcion.touched && form.controls.descripcion.invalid) {
+    <div class="error">
+      La descripcion debe tener al menos 5 caracteres.
+    </div>
+    }
 
     <label class="check">
       <input type="checkbox" formControlName="completada" />

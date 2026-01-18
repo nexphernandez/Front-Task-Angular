@@ -19,6 +19,15 @@ export class TasksService {
     return created;
   }
 
+  completada(id: number): void {
+    this.tasks = this.tasks.map(t => {
+      if (t.id === id) {
+        return { ...t, completada: !t.completada }; 
+      }
+      return t;
+    });
+  }
+
   remove(id: number): void {
     this.tasks = this.tasks.filter(t => t.id !== id);
   }

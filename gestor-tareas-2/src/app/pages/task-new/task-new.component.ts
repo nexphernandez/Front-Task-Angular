@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TasksService } from '../../services/tasks.service';
+import { TasksApiService } from '../../services/tasks-api.service';
 
 @Component({
   selector: 'app-task-new',
@@ -12,7 +12,7 @@ import { TasksService } from '../../services/tasks.service';
 })
 export class TaskNewComponent {
   private fb = inject(FormBuilder);
-  private tasks = inject(TasksService);
+  private tasks = inject(TasksApiService);
   private router = inject(Router);
 
   form = this.fb.nonNullable.group({
@@ -23,12 +23,20 @@ export class TaskNewComponent {
 
   save() {
     if (this.form.invalid) {
-      console.warn('form inválido', this.form.errors, this.form.value);
       this.form.markAllAsTouched();
       return;
     }
-    this.tasks.add(this.form.getRawValue());
-    this.router.navigateByUrl('/tareas');
+  
+    const data = this.form.getRawValue();
+    console.log('ENVIANDO AL BACKEND:', data);
+  
+    this.tasks.create(data).subscribe({
+      next: res => {
+        console.log('RESPUESTA BACKEND:', res);
+        this.router.navigateByUrl('/tareas');
+      },
+      error: err => console.error(err)
+    });
   }
 
   cancel() {
