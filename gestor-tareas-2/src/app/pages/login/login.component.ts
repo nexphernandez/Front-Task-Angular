@@ -25,16 +25,10 @@ private fb = inject(FormBuilder);
       this.form.markAllAsTouched();
       return;
     } 
-  
     const data = this.form.getRawValue();
     console.log('ENVIANDO AL BACKEND:', data);
-  
-    this.auth.login(data).subscribe({
-      next: res => {
-        this.router.navigateByUrl('/tareas');
-      },
-      error: err => console.error(err)
-    });
+    this.auth.login(data)
+    this.router.navigateByUrl('/tareas');
   }
 
   cancel() {
