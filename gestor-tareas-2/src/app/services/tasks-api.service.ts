@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NewTask, Task } from '../models/task.model';
+import { AuthApiService } from './auth-api.service';
 
 // Interfaz para lo que el backend espera/devuelve (en inglés)
 interface TaskBackend {
@@ -21,6 +22,8 @@ interface NewTaskBackend {
 @Injectable({ providedIn: 'root' })
 export class TasksApiService {
     private baseUrl = 'http://localhost:8080/api/v1/tasks';
+    private auth = inject(AuthApiService);
+    public token = this.auth.getToken()
 
     constructor(private http: HttpClient) { }
 
@@ -48,8 +51,15 @@ export class TasksApiService {
       return base;
     }
 
+    private getAuthHeaders(): HttpHeaders{
+      return new HttpHeaders({
+        "Content-Type":"aplication/json; charset=utf-8",
+        "Authorization": `Bearer ${this.token}`
+      })
+    }
     list(): Observable<Task[]> {
-        return this.http.get<TaskBackend[]>(this.baseUrl).pipe(
+      const result = this.http.get<TaskBackend[]>(this.baseUrl,{headers:this.getAuthHeaders()});
+        return result.pipe(
           map(tasks => tasks.map(t => this.fromBackend(t)))
         );
     }

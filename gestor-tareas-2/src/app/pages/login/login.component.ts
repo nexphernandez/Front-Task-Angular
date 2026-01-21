@@ -31,7 +31,6 @@ private fb = inject(FormBuilder);
   
     this.auth.login(data).subscribe({
       next: res => {
-        console.log('RESPUESTA BACKEND:', res);
         this.router.navigateByUrl('/tareas');
       },
       error: err => console.error(err)
