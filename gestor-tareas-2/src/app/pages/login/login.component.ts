@@ -21,10 +21,10 @@ private fb = inject(FormBuilder);
   });
 
   login() {
-/*     if (this.form.invalid) {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
-    } */
+    } 
   
     const data = this.form.getRawValue();
     console.log('ENVIANDO AL BACKEND:', data);

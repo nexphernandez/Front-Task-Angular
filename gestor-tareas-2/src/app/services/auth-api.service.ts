@@ -8,7 +8,7 @@ export class AuthApiService {
     private baseUrl = 'http://localhost:8080/api/v1/auth/login';
     constructor(private http: HttpClient) { }
 
-    login(data:{username:string,password:string}):Observable<Auth>{
-        return this.http.post<Auth>(this.baseUrl,data);
+    login(user:Auth):Observable<string>{
+        return this.http.post<string>(this.baseUrl,user);
     }
 }
