@@ -84,7 +84,7 @@ export class TasksApiService {
 
     update(task: Task): Observable<Task> {
         const backendData = this.toBackend(task);
-        return this.http.put<TaskBackend>(`${this.baseUrl}/${task.id}`, backendData,{headers:this.getAuthHeaders()}).pipe(
+        return this.http.patch<TaskBackend>(`${this.baseUrl}/${task.id}`, backendData,{headers:this.getAuthHeaders()}).pipe(
           map(t => this.fromBackend(t))
         );
     }

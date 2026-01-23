@@ -30,6 +30,8 @@ export class TasksComponent {
     this.tasksService.update(updatedTask).subscribe({
       next: () => this.tasks = this.tasks.map(t => {
         if (t.id === task.id) {
+          console.log(updatedTask);
+          
           return updatedTask;
         }
         return t;
