@@ -14,13 +14,13 @@ export class AuthApiService {
 
 
 
-    login(user: Auth): void {
-        this.http.post<AutResponse>(this.baseUrl, user).pipe(
-            tap(res => {
-                localStorage.setItem(this.TOKEN_KEY, res.token);
-            }))
-
-    }
+    login(user: Auth): Observable<{ token: string }> {
+        return this.http.post<{ token: string }>(this.baseUrl, user).pipe(
+          tap(res => {
+            localStorage.setItem('token', res.token);
+          })
+        );
+      }
 
     getToken(): string | null {
         return localStorage.getItem(this.TOKEN_KEY);

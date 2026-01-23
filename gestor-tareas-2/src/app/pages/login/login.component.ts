@@ -27,8 +27,14 @@ private fb = inject(FormBuilder);
     } 
     const data = this.form.getRawValue();
     console.log('ENVIANDO AL BACKEND:', data);
-    this.auth.login(data)
-    this.router.navigateByUrl('/tareas');
+    this.auth.login(data).subscribe({
+      next: () => {
+        this.router.navigateByUrl('/tareas');
+      },
+      error: err => {
+        console.error('Error de login', err);
+      }
+    });
   }
 
   cancel() {

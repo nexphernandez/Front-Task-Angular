@@ -23,7 +23,6 @@ interface NewTaskBackend {
 export class TasksApiService {
     private baseUrl = 'http://localhost:8080/api/v1/tasks';
     private auth = inject(AuthApiService);
-    public token = this.auth.getToken()
 
     constructor(private http: HttpClient) { }
 
@@ -52,38 +51,40 @@ export class TasksApiService {
     }
 
     private getAuthHeaders(): HttpHeaders{
+      const token = this.auth.getToken();
       return new HttpHeaders({
-        "Content-Type":"aplication/json; charset=utf-8",
-        "Authorization": `Bearer ${this.token}`
+        "Content-Type":"application/json; charset=utf-8",
+        "Authorization": `Bearer ${token}`
       })
     }
     list(): Observable<Task[]> {
       const result = this.http.get<TaskBackend[]>(this.baseUrl,{headers:this.getAuthHeaders()});
+        
         return result.pipe(
           map(tasks => tasks.map(t => this.fromBackend(t)))
         );
     }
 
     get(id: number): Observable<Task> {
-        return this.http.get<TaskBackend>(`${this.baseUrl}/${id}`).pipe(
+        return this.http.get<TaskBackend>(`${this.baseUrl}/${id}`,{headers:this.getAuthHeaders()}).pipe(
           map(t => this.fromBackend(t))
         );
     }
 
     create(data: NewTask): Observable<Task> {
         const backendData = this.toBackend(data);
-        return this.http.post<TaskBackend>(this.baseUrl, backendData).pipe(
+        return this.http.post<TaskBackend>(this.baseUrl, backendData,{headers:this.getAuthHeaders()}).pipe(
           map(t => this.fromBackend(t))
         );
     }
 
     remove(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/${id}`);
+        return this.http.delete<void>(`${this.baseUrl}/${id}`,{headers:this.getAuthHeaders()});
     }
 
     update(task: Task): Observable<Task> {
         const backendData = this.toBackend(task);
-        return this.http.put<TaskBackend>(`${this.baseUrl}/${task.id}`, backendData).pipe(
+        return this.http.put<TaskBackend>(`${this.baseUrl}/${task.id}`, backendData,{headers:this.getAuthHeaders()}).pipe(
           map(t => this.fromBackend(t))
         );
     }
